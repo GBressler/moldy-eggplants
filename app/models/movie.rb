@@ -13,4 +13,5 @@ class Movie < ApplicationRecord
       title: title
     }
   end
+  
 end
