@@ -1,17 +1,17 @@
 class MoviesController < ApplicationController
-  wrap_parameters Movie
   before_action :set_movie, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show, :search]
 
-
+=begin
  def search
-    if movie_params[:search].present?
-      @movies = Movie.search(movie_params[:search])
+    search = params[:term].present? ? params[:term] : nil
+      @movies = if search
+        Movie.where("title Like ?", "%#{search}%" )
     else
-      @movies = Movie.all   
+      Movie.all   
     end   
   end
-
+=end
   # GET /movies
   # GET /movies.json
 =begin  def index
@@ -32,7 +32,12 @@ class MoviesController < ApplicationController
   end
 =end
 def index
-  @movies = Movie.all
+   search = params[:term].present? ? params[:term] : nil
+      @movies = if search
+        Movie.where("title Like ?", "%#{search}%" )
+    else
+      Movie.all   
+    end   
 end
   # GET /movies/1
   # GET /movies/1.json
@@ -103,6 +108,6 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def movie_params
-      params.require(:movie).permit(:title, :description, :movie_length, :director, :image, :search,  :rating)
+      params.require(:movie).permit(:title, :description, :movie_length, :director, :image, :rating)
     end
 end
